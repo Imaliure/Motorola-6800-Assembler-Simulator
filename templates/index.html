@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>6800 Assembler Simulator</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 20px;
+    background: #f0f2f5;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  #container {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #input-section, #result-section {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    flex: 1;
+    min-width: 0;
+  }
+  #input-section {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    /* Yukarıda kalması için flex düzeni içinde */
+  }
+  textarea {
+    resize: horizontal; /* Yalnızca genişlik değiştirilebilir */
+    width: 100%;
+    height: 350px; /* Yüksekliği biraz kısalttım */
+    font-family: monospace;
+    font-size: 14px;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fafafa;
+    flex-grow: 0; /* yükseklik sabit */
+    transition: border-color 0.3s;
+  }
+  /* İstersen genişlik için minimum da koyabilirsin */
+  #input-section textarea {
+    min-width: 400px;
+  }
+  textarea:focus {
+    outline: none;
+    border-color: #4a90e2;
+    background: #fff;
+  }
+  button {
+    margin-top: 15px;
+    padding: 12px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  button:hover {
+    background-color: #357ABD;
+  }
+  #result-section h2, #result-section h3 {
+    margin-top: 0;
+  }
+  pre {
+    background: #272822;
+    color: #f8f8f2;
+    padding: 15px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'Source Code Pro', monospace, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  #result-section p.error {
+    color: #cc0000;
+    font-weight: 700;
+    background: #fdd;
+    padding: 10px;
+    border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Motorola 6800 Assembler Simulator</h1>
+<div id="container">
+  <section id="input-section">
+    <form id="codeForm">
+      <label for="code">Assembly Code:</label>
+      <textarea id="code" name="code" placeholder="Kodunuzu buraya yazın..."></textarea>
+      <button type="submit">Simüle Et</button>
+    </form>
+  </section>
+
+  <section id="result-section">
+    <h2>Sonuçlar</h2>
+    <div id="result">Simülasyon sonucu burada görünecek...</div>
+  </section>
+</div>
+
+<script>
+  const form = document.getElementById('codeForm');
+  const resultDiv = document.getElementById('result');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    resultDiv.textContent = "Simülasyon çalışıyor...";
+
+    const formData = new FormData(form);
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        body: formData
+      });
+      const data = await response.json();
+
+      if (data.status === "success") {
+        let output = "";
+        output += "<h3>Register Durumu</h3><pre>";
+        output += `Register A: ${data.registers.A}\nRegister B: ${data.registers.B}</pre>`;
+        output += "<h3>Hafıza Durumu</h3><pre>";
+        if (Object.keys(data.memory).length === 0) {
+          output += "(Boş)";
+        } else {
+          for (const [addr, val] of Object.entries(data.memory)) {
+            output += `${addr}: ${val}\n`;
+          }
+        }
+        output += "</pre>";
+        resultDiv.innerHTML = output;
+      } else {
+        resultDiv.innerHTML = `<p class="error">Hata: ${data.message}</p>`;
+      }
+    } catch (err) {
+      resultDiv.innerHTML = `<p class="error">Beklenmeyen hata: ${err.message}</p>`;
+    }
+  });
+</script>
+
+</body>
+</html>

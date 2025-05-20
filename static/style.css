@@ -1,0 +1,95 @@
+
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 20px;
+    background: #f0f2f5;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  #container {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #input-section, #result-section {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    flex: 1;
+    min-width: 0;
+  }
+  #input-section {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    /* Yukarıda kalması için flex düzeni içinde */
+  }
+  textarea {
+    resize: horizontal; /* Yalnızca genişlik değiştirilebilir */
+    width: 100%;
+    height: 350px; /* Yüksekliği biraz kısalttım */
+    font-family: monospace;
+    font-size: 14px;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fafafa;
+    flex-grow: 0; /* yükseklik sabit */
+    transition: border-color 0.3s;
+  }
+  /* İstersen genişlik için minimum da koyabilirsin */
+  #input-section textarea {
+    min-width: 400px;
+  }
+  textarea:focus {
+    outline: none;
+    border-color: #4a90e2;
+    background: #fff;
+  }
+  button {
+    margin-top: 15px;
+    padding: 12px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  button:hover {
+    background-color: #357ABD;
+  }
+  #result-section h2, #result-section h3 {
+    margin-top: 0;
+  }
+  pre {
+    background: #272822;
+    color: #f8f8f2;
+    padding: 15px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'Source Code Pro', monospace, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  #result-section p.error {
+    color: #cc0000;
+    font-weight: 700;
+    background: #fdd;
+    padding: 10px;
+    border-radius: 6px;
+  }
